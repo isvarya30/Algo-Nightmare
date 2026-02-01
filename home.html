@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Haunted Home</title>
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP for animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- Creepy Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Creepster', cursive;
+      background: url('loginback.png') no-repeat center center/cover;
+      overflow: hidden;
+    }
+
+    .house {
+      width: 200px;
+      transition: transform 0.3s ease;
+    }
+
+    .house:hover {
+      transform: scale(1.1) rotate(1deg);
+      cursor: pointer;
+    }
+
+    .house-label {
+      position: absolute;
+      bottom: -2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.8rem;
+      color: red;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      text-shadow: 0 0 8px black;
+      pointer-events: none;
+    }
+
+    .house-container:hover .house-label {
+      opacity: 1;
+    }
+
+    #settings {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      filter: drop-shadow(0 0 4px white);
+    }
+
+    #lightning {
+      transition: opacity 0.3s ease;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Music -->
+  <audio loop id="bg-music">
+    <source src="scream.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Thunder Sound -->
+  <audio id="thunder-sound">
+    <source src="thunder.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Thunder Flash -->
+  <div id="lightning" class="fixed inset-0 bg-white opacity-0 pointer-events-none z-50"></div>
+
+  <!-- 3D Houses Triangle Layout -->
+  <div class="h-screen w-screen flex justify-center items-center relative">
+
+    <!-- House 1 -->
+    <div class="house-container absolute top-[15%] left-[20%]" onclick="navigate('1stnew.html')">
+      <img src="house1.webp" alt="House 1" class="house" />
+      <div class="house-label">Co-op Challenge</div>
+    </div>
+
+    <!-- House 2 -->
+    <div class="house-container absolute bottom-[15%] left-1/2 transform -translate-x-1/2" onclick="navigate('3.html')">
+      <img src="house1.webp" alt="House 2" class="house" />
+      <div class="house-label">Quiz Time</div>
+    </div>
+
+    <!-- House 3 -->
+    <div class="house-container absolute top-[15%] right-[20%]" onclick="navigate('2ndnew.html')">
+      <img src="house1.webp" alt="House 3" class="house" />
+      <div class="house-label">Escape Room</div>
+    </div>
+  </div>
+
+  <!-- Settings Icon -->
+  <img id="settings" src="settings-icon.png" alt="Settings" onclick="navigate('dashboard.html')" />
+
+  <script>
+    function navigate(page) {
+      window.location.href = page;
+    }
+
+    const bgMusic = document.getElementById("bg-music");
+    const thunderSound = document.getElementById("thunder-sound");
+    const flash = document.getElementById("lightning");
+
+    // Lightning flash + sound combo
+    function triggerLightning() {
+      gsap.to(flash, {
+        opacity: 0.7,
+        duration: 0.1,
+        onComplete: () => {
+          gsap.to(flash, { opacity: 0, duration: 0.3 });
+        }
+      });
+
+      thunderSound.currentTime = 0;
+      thunderSound.play().catch(err => console.warn("Thunder sound error:", err));
+    }
+
+    // Immediately try playing thunder on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      thunderSound.volume = 1;
+      thunderSound.play().then(() => {
+        console.log("Thunder sound auto-played.");
+        triggerLightning();
+      }).catch(err => {
+        console.warn("Autoplay blocked. Waiting for click...");
+        document.body.addEventListener("click", () => {
+          thunderSound.play();
+          triggerLightning();
+          bgMusic.play().catch(() => {});
+        }, { once: true });
+      });
+    });
+
+    // Random thunder after load
+    setInterval(() => {
+      if (Math.random() < 0.3) {
+        triggerLightning();
+      }
+    }, 4000);
+  </script>
+</body>
+</html>

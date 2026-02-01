@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Mainframe Escape - DSA Horror Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
+            color: #00ff88;
+            overflow-x: hidden;
+            cursor: crosshair;
+        }
+
+        .smoke-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .smoke {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(255,0,0,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: smokeFloat 8s infinite ease-in-out;
+            opacity: 0.6;
+        }
+
+        @keyframes smokeFloat {
+            0%, 100% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100px) scale(1.5) rotate(180deg); opacity: 0.6; }
+        }
+
+        .glitch {
+            animation: glitch 0.3s infinite;
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .container {
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-bottom: 2px solid #ff0040;
+            box-shadow: 0 0 20px rgba(255, 0, 64, 0.5);
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040;
+            margin-bottom: 10px;
+            animation: titlePulse 2s infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #ff6666;
+            text-shadow: 0 0 5px #ff0040;
+        }
+
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .panel {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 300px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #00ff88;
+            text-shadow: 0 0 8px #00ff88;
+        }
+
+        .level-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .level-btn, .difficulty-btn, .role-btn {
+            background: linear-gradient(145deg, #ff0040, #cc0033);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.3);
+        }
+
+        .level-btn:hover, .difficulty-btn:hover, .role-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 64, 0.6);
+        }
+
+        .level-btn.active, .difficulty-btn.active, .role-btn.active {
+            background: linear-gradient(145deg, #00ff88, #00cc66);
+            color: #000;
+        }
+
+        .drag-area {
+            min-height: 200px;
+            border: 2px dashed #ff0040;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            background: rgba(255, 0, 64, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .drag-area.drag-over {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .draggable {
+            background: linear-gradient(145deg, #333, #1a1a1a);
+            border: 2px solid #00ff88;
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: grab;
+            display: inline-block;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .draggable:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .draggable.dragging {
+            opacity: 0.7;
+            transform: rotate(5deg) scale(1.1);
+            cursor: grabbing;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff88, #ff0040);
+            transform-origin: left center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .connection-line.visible {
+            opacity: 1;
+            animation: connectionPulse 2s infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.8); }
+        }
+
+        .ghost {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 5rem;
+            z-index: 1000;
+            pointer-events: none;
+            text-shadow: 0 0 20px #ff0040;
+            transition: all 0.3s ease;
+        }
+
+        .ghost.jump-scare {
+            transform: translate(-50%, -50%) scale(2);
+            animation: ghostShake 0.5s ease-out;
+        }
+
+        @keyframes ghostShake {
+            0%, 100% { transform: translate(-50%, -50%) scale(2) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) scale(2.2) rotate(-10deg); }
+            75% { transform: translate(-50%, -50%) scale(2.2) rotate(10deg); }
+        }
+
+        .payload-success {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .payload-success.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .payload-text {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #00ff88;
+            text-shadow: 0 0 30px #00ff88;
+            animation: payloadPulse 1s infinite;
+        }
+
+        @keyframes payloadPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status-display {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff0040;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .error {
+            color: #ff4444;
+            text-shadow: 0 0 5px #ff4444;
+        }
+
+        .success {
+            color: #44ff44;
+            text-shadow: 0 0 5px #44ff44;
+        }
+
+        .warning {
+            color: #ffaa44;
+            text-shadow: 0 0 5px #ffaa44;
+        }
+
+        .voice-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 0, 64, 0.8);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .voice-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .node-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .tree-visualization {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            min-height: 300px;
+        }
+
+        .tree-level {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .tree-node {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #333, #1a1a1a);
+            border: 2px solid #00ff88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tree-node.empty {
+            border-style: dashed;
+            background: transparent;
+        }
+
+        .tree-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .game-area {
+                flex-direction: column;
+            }
+            .panel {
+                min-width: auto;
+            }
+            .title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="smoke-container" id="smokeContainer"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title glitch">DIGITAL MAINFRAME ESCAPE</h1>
+            <p class="subtitle">⚠ SYSTEM LOCKDOWN ACTIVE - REPAIR CORRUPTED CIRCUITS TO ESCAPE ⚠</p>
+        </div>
+
+        <div class="game-area">
+            <!-- Difficulty & Role Selection -->
+            <div class="panel">
+                <div class="panel-title">🎛 SYSTEM CONFIGURATION</div>
+                <div>
+                    <strong>Difficulty:</strong>
+                    <div class="level-selector">
+                        <button class="difficulty-btn active" data-difficulty="medium">MEDIUM</button>
+                        <button class="difficulty-btn" data-difficulty="hard">HARD</button>
+                    </div>
+                </div>
+                <div>
+                    <strong>Your Role:</strong>
+                    <div class="level-selector">
+                        <button class="role-btn active" data-role="mapper">Code Mapper</button>
+                        <button class="role-btn" data-role="feeder">Data Feeder</button>
+                        <button class="role-btn" data-role="debugger">Debugger</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Selection -->
+            <div class="panel">
+                <div class="panel-title">🔧 CIRCUIT REPAIR LEVELS</div>
+                <div class="level-selector">
+                    <button class="level-btn active" data-level="1">Level 1: Missing Links</button>
+                    <button class="level-btn" data-level="2">Level 2: Balance Tree</button>
+                    <button class="level-btn" data-level="3">Level 3: Sort Surge</button>
+                    <button class="level-btn" data-level="4">Level 4: Graph Flow</button>
+                    <button class="level-btn" data-level="5">Level 5: AI Firewall</button>
+                </div>
+            </div>
+
+            <!-- Game Status -->
+            <div class="panel">
+                <div class="panel-title">📊 SYSTEM STATUS</div>
+                <div class="status-display" id="statusDisplay">
+                    <div class="warning">⚠ INITIALIZING REPAIR SEQUENCE...</div>
+                    <div>Current Level: Missing Links (Linked List)</div>
+                    <div>Role: Code Mapper</div>
+                    <div>Difficulty: Medium</div>
+                </div>
+            </div>
+
+            <!-- Available Components -->
+            <div class="panel">
+                <div class="panel-title">🧩 AVAILABLE COMPONENTS</div>
+                <div class="node-container" id="componentContainer">
+                    <!-- Components will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Work Area -->
+            <div class="panel" style="flex: 1; min-width: 400px;">
+                <div class="panel-title">⚡ CIRCUIT CONSTRUCTION AREA</div>
+                <div class="drag-area" id="workArea">
+                    <div id="gameContent">
+                        <!-- Game content will be populated here -->
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="level-btn" id="executeBtn">🔥 EXECUTE REPAIR SEQUENCE</button>
+                    <button class="level-btn" id="resetBtn">🔄 RESET CIRCUIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jump Scare Ghost -->
+    <div class="ghost" id="ghost">👻</div>
+
+    <!-- Success Payload -->
+    <div class="payload-success" id="payloadSuccess">
+        <div class="payload-text">🔓 PAYLOAD UNLOCKED 🔓</div>
+    </div>
+
+    <!-- Voice Indicator -->
+    <div class="voice-indicator" id="voiceIndicator"></div>
+
+    <script>
+        class DSAHorrorGame {
+            constructor() {
+                this.currentLevel = 1;
+                this.currentDifficulty = 'medium';
+                this.currentRole = 'mapper';
+                this.gameData = this.initializeGameData();
+                this.smokeClouds = [];
+                this.connections = [];
+                this.init();
+            }
+
+            init() {
+                this.createSmokeEffects();
+                this.bindEvents();
+                this.loadLevel();
+                this.playCreepyVoice("Welcome to the Digital Mainframe... Your soul is now trapped...");
+            }
+
+            createSmokeEffects() {
+                const smokeContainer = document.getElementById('smokeContainer');
+                for (let i = 0; i < 8; i++) {
+                    const smoke = document.createElement('div');
+                    smoke.className = 'smoke';
+                    smoke.style.left = Math.random() * 100 + '%';
+                    smoke.style.animationDelay = Math.random() * 8 + 's';
+                    smoke.style.animationDuration = (6 + Math.random() * 4) + 's';
+                    smokeContainer.appendChild(smoke);
+                }
+            }
+
+            bindEvents() {
+                // Difficulty selection
+                document.querySelectorAll('.difficulty-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.difficulty-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentDifficulty = e.target.dataset.difficulty;
+                        this.updateStatus();
+                        this.loadLevel();
+                    });
+                });
+
+                // Role selection
+                document.querySelectorAll('.role-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentRole = e.target.dataset.role;
+                        this.updateStatus();
+                        this.loadLevel();
+                    });
+                });
+
+                // Level selection
+                document.querySelectorAll('.level-btn').forEach(btn => {
+                    if (btn.dataset.level) {
+                        btn.addEventListener('click', (e) => {
+                            document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+                            e.target.classList.add('active');
+                            this.currentLevel = parseInt(e.target.dataset.level);
+                            this.loadLevel();
+                        });
+                    }
+                });
+
+                // Execute and Reset buttons
+                document.getElementById('executeBtn').addEventListener('click', () => this.executeRepair());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetCircuit());
+
+                // Drag and drop
+                this.setupDragAndDrop();
+            }
+
+            setupDragAndDrop() {
+                let draggedElement = null;
+
+                document.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('draggable')) {
+                        draggedElement = e.target;
+                        e.target.classList.add('dragging');
+                    }
+                });
+
+                document.addEventListener('dragend', (e) => {
+                    if (e.target.classList.contains('draggable')) {
+                        e.target.classList.remove('dragging');
+                        draggedElement = null;
+                    }
+                });
+
+                document.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (e.target.closest('.drag-area')) {
+                        e.target.closest('.drag-area').classList.add('drag-over');
+                    }
+                });
+
+                document.addEventListener('dragleave', (e) => {
+                    if (e.target.closest('.drag-area')) {
+                        e.target.closest('.drag-area').classList.remove('drag-over');
+                    }
+                });
+
+                document.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const dropArea = e.target.closest('.drag-area');
+                    if (dropArea && draggedElement) {
+                        dropArea.classList.remove('drag-over');
+                        this.handleDrop(draggedElement, dropArea, e);
+                    }
+                });
+            }
+
+            handleDrop(element, dropArea, event) {
+                const rect = dropArea.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+
+                const newElement = element.cloneNode(true);
+                newElement.style.position = 'absolute';
+                newElement.style.left = x + 'px';
+                newElement.style.top = y + 'px';
+                newElement.draggable = true;
+
+                dropArea.appendChild(newElement);
+                this.checkConnections();
+            }
+
+            initializeGameData() {
+                return {
+                    1: { // Level 1: Linked List
+                        name: "Missing Links",
+                        description: "Reconstruct the broken linked list",
+                        components: {
+                            medium: [
+                                { id: 'A', value: 12, type: 'node' },
+                                { id: 'B', value: 5, type: 'node' },
+                                { id: 'C', value: 20, type: 'node' },
+                                { id: 'NULL', value: null, type: 'terminator' }
+                            ],
+                            hard: [
+                                { id: 'A', value: 15, type: 'node' },
+                                { id: 'B', value: 7, type: 'node' },
+                                { id: 'C', value: 23, type: 'node' },
+                                { id: 'D', value: 1, type: 'node' },
+                                { id: 'E', value: 18, type: 'node' },
+                                { id: 'NULL', value: null, type: 'terminator' }
+                            ]
+                        },
+                        solution: {
+                            medium: ['A', 'B', 'C', 'NULL'],
+                            hard: ['D', 'B', 'A', 'E', 'C', 'NULL']
+                        }
+                    },
+                    2: { // Level 2: Binary Tree
+                        name: "Balance the Tree",
+                        description: "Fix the unbalanced binary tree",
+                        components: {
+                            medium: [
+                                { id: '10', value: 10, type: 'root' },
+                                { id: '5', value: 5, type: 'left' },
+                                { id: '15', value: 15, type: 'right' },
+                                { id: '3', value: 3, type: 'leaf' },
+                                { id: '7', value: 7, type: 'leaf' }
+                            ],
+                            hard: [
+                                { id: '20', value: 20, type: 'root' },
+                                { id: '10', value: 10, type: 'left' },
+                                { id: '30', value: 30, type: 'right' },
+                                { id: '5', value: 5, type: 'leaf' },
+                                { id: '15', value: 15, type: 'leaf' },
+                                { id: '25', value: 25, type: 'leaf' },
+                                { id: '35', value: 35, type: 'leaf' }
+                            ]
+                        }
+                    },
+                    3: { // Level 3: Sorting
+                        name: "Sort the Surge",
+                        description: "Sort the unstable data stream",
+                        components: {
+                            medium: [
+                                { id: '64', value: 64, type: 'data' },
+                                { id: '34', value: 34, type: 'data' },
+                                { id: '25', value: 25, type: 'data' },
+                                { id: '12', value: 12, type: 'data' },
+                                { id: '22', value: 22, type: 'data' },
+                                { id: '11', value: 11, type: 'data' }
+                            ],
+                            hard: [
+                                { id: '88', value: 88, type: 'data' },
+                                { id: '76', value: 76, type: 'data' },
+                                { id: '23', value: 23, type: 'data' },
+                                { id: '43', value: 43, type: 'data' },
+                                { id: '35', value: 35, type: 'data' },
+                                { id: '65', value: 65, type: 'data' },
+                                { id: '12', value: 12, type: 'data' },
+                                { id: '90', value: 90, type: 'data' }
+                            ]
+                        }
+                    }
+                };
+            }
+
+            loadLevel() {
+                const levelData = this.gameData[this.currentLevel];
+                if (!levelData) return;
+
+                this.updateStatus();
+                this.populateComponents();
+                this.setupGameContent();
+                
+                const creepyMessages = [
+                    "The circuits hunger for your failure...",
+                    "One wrong move and you're trapped forever...",
+                    "Can you hear the digital screams?",
+                    "The mainframe is watching you..."
+                ];
+                
+                this.playCreepyVoice(creepyMessages[Math.floor(Math.random() * creepyMessages.length)]);
+            }
+
+            populateComponents() {
+                const container = document.getElementById('componentContainer');
+                const levelData = this.gameData[this.currentLevel];
+                const components = levelData.components[this.currentDifficulty];
+
+                container.innerHTML = '';
+
+    components.forEach(component => {
+        const element = document.createElement('div');
+        element.className = 'draggable';
+        element.draggable = true;
+        element.dataset.id = component.id;
+        element.dataset.value = component.value;
+        element.dataset.type = component.type;
+
+        // Role-based visibility
+        let displayText = '';
+        switch (this.currentRole) {
+            case 'mapper':
+                displayText = `[${component.id}] → ?`;
+                break;
+            case 'feeder':
+                displayText = `? = ${component.value}`;
+                break;
+            case 'debugger':
+                displayText = `${component.id}(${component.value})`;
+                break;
+            default:
+                displayText = '[UNKNOWN ROLE]';
+        }
+        element.textContent = displayText;
+        container.appendChild(element);
+    });
+}
+
+
+            setupGameContent()
+            {
+                const gameContent = document.getElementById('gameContent');
+                const levelData = this.gameData[this.currentLevel];
+
+                switch (this.currentLevel) {
+                    case 1:
+                        gameContent.innerHTML = `
+                            <div style="text-align: center; color: #ff6666;">
+                                <h3>🔗 LINKED LIST RECONSTRUCTION</h3>
+                                <p>Drag nodes to form the correct sequence</p>
+                                <div style="margin: 20px 0; font-family: monospace;">
+                                    HEAD → [?] → [?] → [?] → NULL
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 2:
+                        gameContent.innerHTML = `
+                            <div class="tree-visualization">
+                                <h3 style="color: #ff6666;">🌳 BINARY TREE BALANCING</h3>
+                                <div class="tree-level">
+                                    <div class="tree-node empty" data-position="root">?</div>
+                                </div>
+                                <div class="tree-level">
+                                    <div class="tree-node empty" data-position="left">?</div>
+                                    <div class="tree-node empty" data-position="right">?</div>
+                                </div>
+                                <div class="tree-level">
+                                    <div class="tree-node empty" data-position="ll">?</div>
+                                    <div class="tree-node empty" data-position="lr">?</div>
+                                    <div class="tree-node empty" data-position="rl">?</div>
+                                    <div class="tree-node empty" data-position="rr">?</div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 3:
+                        gameContent.innerHTML = `
+                            <div style="text-align: center; color: #ff6666;">
+                                <h3>📊 MERGE SORT ALGORITHM</h3>
+                                <p>Arrange elements in ascending order</p>
+                                <div style="margin: 20px 0; padding: 20px; border: 1px dashed #ff0040;">
+                                    <div>UNSORTED: Drop elements here in correct order</div>
+                                    <div style="margin-top: 10px; min-height: 50px; border: 1px dashed #00ff88;">
+                                        SORTED SEQUENCE
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                }
+            }
+
+            checkConnections() 
+            {
+                // Clear existing connections
+                document.querySelectorAll('.connection-line').forEach(line => line.remove());
+
+                const workArea = document.getElementById('workArea');
+                const elements = workArea.querySelectorAll('.draggable');
+                
+                if (elements.length < 2) return;
+
+                // Create connections between adjacent elements
+                for (let i = 0; i < elements.length - 1; i++) {
+                    const elem1 = elements[i];
+                    const elem2 = elements[i + 1];
+                    this.drawConnection(elem1, elem2, workArea);
+                }
+            }
+
+            drawConnection(elem1, elem2, container) {
+                const rect1 = elem1.getBoundingClientRect();
+                const rect2 = elem2.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+
+                const x1 = rect1.right - containerRect.left;
+                const y1 = rect1.top + rect1.height / 2 - containerRect.top;
+                const x2 = rect2.left - containerRect.left;
+                const y2 = rect2.top + rect2.height / 2 - containerRect.top;
+
+                const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+                const line = document.createElement('div');
+                line.className = 'connection-line visible';
+                line.style.left = x1 + 'px';
+                line.style.top = y1 + 'px';
+                line.style.width = length + 'px';
+             line.style.transform = `rotate(${angle}deg)`;
+
+
+                container.appendChild(line);
+            }
+
+            executeRepair()
+            {
+                const workArea = document.getElementById('workArea');
+                const elements = Array.from(workArea.querySelectorAll('.draggable'));
+                
+                if (elements.length === 0) {
+                    this.jumpScare();
+                    this.playCreepyVoice("Empty circuits lead to digital death...");
+                    return;
+                }
+
+                const sequence = elements.map(el => el.dataset.id);
+                const isCorrect = this.validateSolution(sequence);
+
+                if (isCorrect) {
+                    this.showSuccess();
+                    this.playCreepyVoice("Congratulations... you've escaped this level of hell...");
+                } else {
+                    this.jumpScare();
+                    this.playCreepyVoice("WRONG! The mainframe grows stronger with your failure!");
+                }
+            }
+
+            validateSolution(sequence) 
+            {
+                const levelData = this.gameData[this.currentLevel];
+                if (!levelData.solution) return Math.random() > 0.3; // Simulated validation for levels without explicit solutions
+
+                const correctSequence = levelData.solution[this.currentDifficulty];
+                if (!correctSequence) return Math.random() > 0.3;
+
+                return JSON.stringify(sequence) === JSON.stringify(correctSequence);
+            }
+
+            jumpScare() 
+            
+            {
+                const ghost = document.getElementById('ghost');
+                ghost.classList.add('jump-scare');
+                
+                // Add glitch effect to entire page
+                document.body.classList.add('glitch');
+                
+                // Random scary emojis
+                const scaryEmojis = ['👻', '🎃', '💀', '👹', '🔥', '⚡'];
+                ghost.textContent = scaryEmojis[Math.floor(Math.random() * scaryEmojis.length)];
+                
+                setTimeout(() => {
+                    ghost.classList.remove('jump-scare');
+                    document.body.classList.remove('glitch');
+                }, 500);
+            }
+
+            showSuccess()
+             {
+                const success = document.getElementById('payloadSuccess');
+                success.classList.add('show');
+                
+                setTimeout(() => {
+                    success.classList.remove('show');
+                    if (this.currentLevel < 5) {
+                        this.currentLevel++;
+                        this.loadLevel();
+                    }
+                }, 3000);
+            }
+
+            resetCircuit()
+             {
+                const workArea = document.getElementById('workArea');
+                const draggables = workArea.querySelectorAll('.draggable');
+                draggables.forEach(el => el.remove());
+                
+                document.querySelectorAll('.connection-line').forEach(line => line.remove());
+                
+                this.playCreepyVoice("Circuits reset... but the digital demons remain...");
+            }
+
+            updateStatus()
+             {
+                const statusDisplay = document.getElementById('statusDisplay');
+                const levelData = this.gameData[this.currentLevel];
+                
+                statusDisplay.innerHTML = `
+                    <div class="warning">⚠ REPAIR SEQUENCE ACTIVE</div>
+                    <div>Current Level: ${levelData ? levelData.name : 'Unknown'}</div>
+                    <div>Role: ${this.currentRole.charAt(0).toUpperCase() + this.currentRole.slice(1)}</div>
+                    <div>Difficulty: ${this.currentDifficulty.toUpperCase()}</div>
+                    <div class="error">🔥 System integrity: ${Math.floor(Math.random() * 40 + 30)}%</div>
+                `;
+            }
+
+            playCreepyVoice(message)
+             {
+                const indicator = document.getElementById('voiceIndicator');
+                indicator.textContent = `🎙 AI Voice: "${message}"`;
+
+                indicator.classList.add('show');
+                
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 4000);
+            }
+        }
+
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new DSAHorrorGame();
+
+            // Add some ambient horror effects
+            setInterval(() => {
+                const elements = document.querySelectorAll('.panel');
+                if (elements.length === 0) return; // safety check
+
+                const randomElement = elements[Math.floor(Math.random() * elements.length)];
+                randomElement.classList.add('glitch');
+                setTimeout(() => {
+                    randomElement.classList.remove('glitch');
+                }, 200);
+            }, 8000);
+
+            // Random creepy system messages
+            setInterval(() => {
+                const messages = [
+                    "System malfunction detected...",
+                    "Digital entities approaching...",
+                    "Circuit corruption spreading...",
+                    "Mainframe consciousness awakening..."
+                ];
+
+                console.log(
+                    `%c${messages[Math.floor(Math.random() * messages.length)]}`,
+                    'color: #ff0040; font-size: 14px; font-weight: bold;'
+                );
+            }, 10000);  // Added interval time here!
+        });
+    </script>
+</body>
+</html>

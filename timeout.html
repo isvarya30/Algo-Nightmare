@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level Failed</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(to top right, #a770ef);
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .container {
+      margin-top: 6rem;
+      padding: 2.5rem;
+      border-radius: 20px;
+      background: #a770ef;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #ffeb3b;
+    }
+
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .buttons button {
+      background: white;
+      color: #6a11cb;
+      border: none;
+      padding: 1rem 2.5rem;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1rem;
+      position: relative;
+      transition: 0.3s ease;
+    }
+
+    .buttons button:hover {
+      background: #6a11cb;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .buttons button::after {
+      content: "⭐";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .buttons button:hover::after {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⏰ Time's Out!</h1>
+    <p>Better luck next time!</p>
+    <div class="buttons">
+      <button onclick="window.location.href='4.html'">🔁 Replay</button>
+      <button onclick="window.location.href='3.html'">🗺️ Map</button>
+    </div>
+  </div>
+</body>
+</html>

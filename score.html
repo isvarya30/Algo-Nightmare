@@ -1,0 +1,139 @@
+<!-- LEVEL COMPLETE PAGE (e.g., 5.html) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level Complete!</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    body {
+      background: url('scoreback.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      overflow: hidden;
+    }
+
+    .container {
+      margin-top: 5rem;
+      padding: 2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    .stars {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: gold;
+    }
+
+    .score, .timing {
+      font-size: 1.3rem;
+      margin: 1rem 0;
+    }
+
+    .buttons {
+      margin-top: 2rem;
+    }
+
+    .buttons button {
+      background-color: white;
+      color:#f863df;
+      border: none;
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .buttons button:hover {
+      background-color:#fa3792;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Level Completed!</h1>
+    <div class="stars" id="stars">
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+      <i class="ri-star-fill"></i>
+    </div>
+    <div class="score" id="score">Your Score: 0</div>
+    <div class="timing" id="timing">Completed in: 0s</div>
+    <div class="buttons">
+      <button onclick="replayLevel()">🔁 Replay</button>
+      <button onclick="goToMap()">🗺️ Map</button>
+      <button onclick="goToNextLevel()">➡️ Next</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const totalDuration = 60;
+    const timeLeft = localStorage.getItem("level1Time") || 60;
+    const timeUsed = totalDuration - timeLeft;
+
+    let starCount = 1;
+    let score = 10;
+
+    if (timeUsed <= 15) {
+      starCount = 3;
+      score = 30;
+    } else if (timeUsed <= 30) {
+      starCount = 2;
+      score = 20;
+    }
+
+    // Save final score
+    localStorage.setItem("quizScore", score);
+
+    // ✅ Save star count for level 1
+    let levelStars = JSON.parse(localStorage.getItem("levelStars")) || {};
+    levelStars[1] = starCount;
+    localStorage.setItem("levelStars", JSON.stringify(levelStars));
+
+    // Update UI
+    document.getElementById("score").textContent = `Your Score: ${score}`;
+    document.getElementById("timing").textContent = `Completed in: ${timeUsed}s`;
+
+    // Animate Stars
+    const stars = document.querySelectorAll(".ri-star-fill");
+    stars.forEach((star, index) => {
+      if (index < starCount) {
+        gsap.fromTo(star, { scale: 0, opacity: 0 }, {
+          scale: 1.2,
+          opacity: 1,
+          delay: index * 0.3,
+          duration: 0.6,
+          ease: "bounce.out",
+          repeat: -1,
+          yoyo: true
+        });
+      } else {
+        star.style.opacity = 0.2;
+      }
+    });
+
+    function replayLevel() {
+      window.location.href = "4.html";
+    }
+
+    function goToMap() {
+      window.location.href = "3.html";
+    }
+
+    function goToNextLevel() {
+      window.location.href = "quiz1.html"; // 👉 Change this to the actual next level HTML page
+    }
+  </script>
+</body>
+</html>

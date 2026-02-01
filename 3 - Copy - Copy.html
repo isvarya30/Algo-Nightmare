@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horror Level Map</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0c0c0c;
+            overflow-x: hidden;
+        }
+
+        .top-bar, .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #2a0a0a;
+            border-bottom: 1px solid #5a1a1a;
+            position: fixed;
+            width: 100%;
+            z-index: 10;
+            color: #e0e0e0;
+        }
+
+        .top-bar {
+            top: 0;
+            border-top: 1px solid #5a1a1a;
+            border-bottom: 1px solid #5a1a1a;
+        }
+
+        .bottom-nav {
+            bottom: 0;
+            border-top: 1px solid #5a1a1a;
+            border-bottom: none;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: #c9c9c9;
+        }
+
+        .map-container {
+            margin-top: 60px;
+            margin-bottom: 60px;
+            position: relative;
+            width: 100vw;
+            height: 2000px;
+            background: url('mapback.png') repeat-y center top;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+        }
+
+        .map-inner {
+            position: relative;
+            width: 300px;
+            height: 100%;
+        }
+
+        .level {
+            position: absolute;
+            background-color: #8b0000;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #ff6347;
+            text-align: center;
+            line-height: 56px;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
+            cursor: pointer;
+            transform: scale(0);
+            text-shadow: 0 0 5px black;
+            /* Add z-index to ensure levels are above the path */
+            z-index: 2; 
+        }
+
+        .level.locked {
+            background-color: #4a4a4a;
+            border-color: #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            cursor: not-allowed;
+        }
+
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* FIX: z-index: -1 was hiding the path. Removed it. */
+            /* The SVG now sits correctly between the background and the levels. */
+            z-index: 1; 
+            pointer-events: none;
+        }
+
+        .avatar {
+            position: absolute;
+            width: 50px;
+            animation: float 3s ease-in-out infinite;
+            z-index: 3; /* Ensure avatar is on top */
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div>❤️ 5 Full</div>
+    <div><img src="https://i.imgur.com/dMdQ3aM.png" alt="Avatar" width="40"></div>
+    <div>💀 0</div>
+</div>
+
+<div class="map-container">
+    <div class="map-inner" id="map">
+        <svg id="path-lines"></svg>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <div class="nav-item">📍<br>MAP</div>
+    <div class="nav-item">📅<br>EVENTS</div>
+    <div class="nav-item">👥<br>FRIENDS</div>
+    <div class="nav-item">🛒<br>SHOP <span style="color:red;font-weight:bold">•</span></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script>
+    const map = document.getElementById("map");
+    const svg = document.getElementById("path-lines");
+
+    // Set SVG dimensions to match its container
+    svg.setAttribute('width', map.clientWidth);
+    svg.setAttribute('height', map.clientHeight);
+
+    const levelPositions = [
+        { x: 120, y: 1850 }, { x: 170, y: 1700 }, { x: 110, y: 1550 },
+        { x: 180, y: 1400 }, { x: 100, y: 1250 }, { x: 190, y: 1100 },
+        { x: 130, y: 950 }, { x: 160, y: 800 }, { x: 90, y: 650 },
+        { x: 170, y: 500 }, { x: 120, y: 350 }, { x: 150, y: 200 }
+    ];
+
+    let unlockedLevel = 1;
+
+    const createLevel = (index, pos) => {
+        const div = document.createElement("div");
+        div.className = "level";
+        div.textContent = index + 1;
+        div.style.left = `${pos.x}px`;
+        div.style.top = `${pos.y}px`;
+
+        if (index + 1 > unlockedLevel) {
+            div.classList.add("locked");
+        } else {
+            div.addEventListener("click", () => {
+                if (index === 0) {
+                    window.location.href = 'quiz.html';
+                } else {
+                    alert(`Entering Level ${index + 1}... 💀`);
+                }
+                if (unlockedLevel === index + 1 && unlockedLevel < levelPositions.length) {
+                    unlockedLevel++;
+                    updateLevels();
+                }
+            });
+        }
+        map.appendChild(div);
+        gsap.to(div, { scale: 1, delay: (levelPositions.length - index) * 0.2, ease: "back.out(1.7)" });
+        return div;
+    };
+
+    const drawLine = (start, end, index) => {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("stroke", "#ff6347");
+        path.setAttribute("stroke-width", "6");
+        path.setAttribute("fill", "none");
+        
+        const startX = start.x + 30;
+        const startY = start.y + 30;
+        const endX = end.x + 30;
+        const endY = end.y + 30;
+
+        const xOffset = (index % 2 === 0) ? -75 : 75;
+        const controlPoint1X = startX + xOffset;
+        const controlPoint1Y = startY - (startY - endY) / 2;
+        const controlPoint2X = endX - xOffset;
+        const controlPoint2Y = endY + (startY - endY) / 2;
+
+        const d = `M ${startX},${startY} C ${controlPoint1X},${controlPoint1Y} ${controlPoint2X},${controlPoint2Y} ${endX},${endY}`;
+        path.setAttribute("d", d);
+        svg.appendChild(path);
+
+        const length = path.getTotalLength();
+
+        gsap.set(path, {
+            strokeDasharray: length,
+            strokeDashoffset: length
+        });
+
+        gsap.to(path, {
+            strokeDashoffset: 0,
+            duration: 1.5,
+            delay: (levelPositions.length - index) * 0.2,
+            ease: "power1.inOut"
+        });
+    };
+
+    const updateLevels = () => {
+        map.querySelectorAll(".level").forEach((el) => {
+            const levelNum = parseInt(el.textContent);
+            if (levelNum <= unlockedLevel) {
+                el.classList.remove("locked");
+            }
+        });
+    };
+
+    const reversedLevels = [...levelPositions].reverse();
+    reversedLevels.forEach((pos, idx) => {
+        const originalIndex = levelPositions.length - 1 - idx;
+        if (idx > 0) {
+            drawLine(reversedLevels[idx - 1], pos, originalIndex);
+        }
+        createLevel(originalIndex, pos);
+    });
+
+    window.onload = () => {
+        window.scrollTo(0, document.body.scrollHeight);
+        updateLevels();
+    };
+</script>
+</body>
+</html>

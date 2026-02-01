@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Game - Level 1</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      
+      background: url('qback.avif') no-repeat center center fixed;
+background-size: cover;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+    
+  
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .question-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #fff;
+      border-radius: 30px;
+      padding: 40px;
+      max-width: 600px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      position: relative;
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      background: #fff;
+      color: #a770ef;
+      border: none;
+      padding: 15px 25px;
+      margin: 10px;
+      border-radius: 50px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .options button:hover {
+      background: #a770ef;
+      color: #fff;
+      transform: scale(1.05);
+    }
+
+    .timer {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="question-box">
+      <div class="timer" id="timer">⏳ 60s</div>
+      <h2 id="question">Sequence: 3, 9, 27, 81, ?, ?, 729. What are the two missing numbers?</h2>
+<div class="options">
+  <button onclick="checkAnswer(0)">243, 243</button>
+  <button onclick="checkAnswer(1)">243, 486</button>
+  <button onclick="checkAnswer(2)">243, 729</button>
+  <button onclick="checkAnswer(3)">243, 567</button>
+</div>
+
+      <button class="toggle-btn" onclick="toggleMic()" id="micBtn">🔇 Mic Off</button>
+      <button class="toggle-btn" onclick="toggleBGM()" id="bgmBtn">🎵 BGM Off</button>
+    </div>
+  </div>
+
+  <audio id="bg-music" loop>
+    <source src="scream.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="click-sound" src="assets/click.wav"></audio>
+  <audio id="correct-sound" src="assets/correct.wav"></audio>
+  <audio id="wrong-sound" src="assets/wrong.wav"></audio>
+  <audio id="timesup-sound" src="assets/timesup.wav"></audio>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const questionText = document.getElementById("question");
+    const timerEl = document.getElementById("timer");
+    const bgmBtn = document.getElementById("bgmBtn");
+    const micBtn = document.getElementById("micBtn");
+    const bgMusic = document.getElementById("bg-music");
+    const clickSound = document.getElementById("click-sound");
+    const correctSound = document.getElementById("correct-sound");
+    const wrongSound = document.getElementById("wrong-sound");
+    const timesupSound = document.getElementById("timesup-sound");
+
+    let micOn = false;
+    let bgmOn = false;
+    let timer = 60;
+    let interval;
+    let correctIndex = 0; // 32 is correct
+
+    function startTimer() {
+      timerEl.textContent = `⏳ ${timer}s`;
+      interval = setInterval(() => {
+        timer--;
+        timerEl.textContent = `⏳ ${timer}s`;
+        if (timer <= 0) {
+          clearInterval(interval);
+          timesupSound.play();
+          alert("⏰ Time's up! Try again.");
+        }
+      }, 1000);
+    }
+
+    function checkAnswer(index) {
+      clickSound.play();
+      if (index === correctIndex) {
+        correctSound.play();
+        localStorage.setItem('level1Complete', 'true');
+        let score = parseInt(localStorage.getItem("quizScore") || "0");
+        score++;
+        localStorage.setItem("quizScore", score);
+        clearInterval(interval);
+        alert("🎉 Correct! Level 2 Unlocked.");
+        window.location.href = 'score1.html';
+      } else {
+        wrongSound.play();
+        alert("❌ Wrong answer! Try again.");
+      }
+    }
+
+    function toggleMic() {
+      micOn = !micOn;
+      micBtn.textContent = micOn ? "🎙️ Mic On" : "🔇 Mic Off";
+      if (micOn) {
+        readQuestion();
+      } else {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function toggleBGM() {
+      bgmOn = !bgmOn;
+      bgmBtn.textContent = bgmOn ? "🎵 BGM On" : "🎵 BGM Off";
+      bgmOn ? bgMusic.play() : bgMusic.pause();
+    }
+
+    function readQuestion() {
+      if (!micOn) return;
+      const synth = window.speechSynthesis;
+      synth.cancel(); // Stop any ongoing speech
+      const utter = new SpeechSynthesisUtterance(
+  "Sequence: 3, 9, 27, 81, blank, blank, 729. What are the two missing numbers? Options are: A, 243 and 567. B, 243 and 486. C, 243 and 729. D, 243 and 243."
+);
+
+
+      synth.speak(utter);
+    }
+
+    // Initial animation
+    gsap.from(".question-box", {
+      duration: 1.2,
+      y: -100,
+      opacity: 0,
+      ease: "bounce.out"
+    });
+
+    // Init
+    startTimer();
+  </script>
+</body>
+</html>

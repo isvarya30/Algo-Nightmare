@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to the Abyss</title>
+
+  <!-- Google Creepy Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;//
+      font-family: 'Creepster', cursive;
+    }
+
+    .gate {
+      position: fixed;
+      top: 0;
+      width: 50vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: 999;
+    }
+
+    .gate.left {
+      left: 0;
+    }
+
+    .gate.right {
+      right: 0;
+    }
+
+    .title {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: red;
+      font-size: 4rem;
+      opacity: 0;
+      z-index: 1000;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    #enter-btn {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: darkred;
+      color: white;
+      padding: 20px 50px;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 1001;
+      border: 3px solid white;
+      border-radius: 10px;
+      font-family: 'Creepster', cursive;
+      transition: transform 0.3s;
+    }
+
+    #enter-btn:hover {
+      transform: translate(-50%, -50%) scale(1.05);
+      background: crimson;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🔥 SCARY AUDIO -->
+  <audio id="bgMusic" loop>
+    <source src="scream.mp3" type="audio/mpeg">
+    Your browser is too scared to play this audio.
+  </audio>
+
+  <!-- 👻 GATES with custom images -->
+  <img src="pei3.png" class="gate left" alt="Left Gate" />
+  <img src="pei4.png" class="gate right" alt="Right Gate" />
+
+  <!-- 🔪 HORROR TITLE -->
+  <div class="title">Enter If You Dare...</div>
+
+  <!-- 🩸 INTERACT BUTTON -->
+  <div id="enter-btn">Enter Mind Ping</div>
+
+  <!-- 👽 SCRIPT MAGIC -->
+  <script>
+    const music = document.getElementById('bgMusic');
+    const enterBtn = document.getElementById('enter-btn');
+
+    enterBtn.addEventListener('click', () => {
+      // Play background audio (after user gesture)
+      music.play().catch(err => console.warn("Autoplay blocked:", err));
+      
+      // Hide the button
+      enterBtn.style.display = 'none';
+
+      // Fade in title
+      gsap.to(".title", {
+        delay: 0.5,
+        duration: 2,
+        opacity: 1,
+        ease: "power2.inOut"
+      });
+
+      // Animate gates open
+      gsap.to(".gate.left", {
+        delay: 1,
+        duration: 3,
+        x: "-100%",
+        ease: "power4.inOut"
+      });
+
+      gsap.to(".gate.right", {
+        delay: 1,
+        duration: 3,
+        x: "100%",
+        ease: "power4.inOut"
+      });
+
+      // Redirect to login.html after animation (4 seconds)
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 6000);
+    });
+  </script>
+</body>
+</html>

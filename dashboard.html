@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Mainframe - Player Profile</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Creepster&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%);
+            color: #ead591;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated Background Effects */
+        .bg-effects {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .smoke-particle {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255,0,0,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: smokeFloat 12s infinite ease-in-out;
+            opacity: 0.4;
+        }
+
+        @keyframes smokeFloat {
+            0%, 100% { transform: translateY(100vh) scale(0.3) rotate(0deg); opacity: 0; }
+            50% { transform: translateY(-100px) scale(1.2) rotate(360deg); opacity: 0.4; }
+        }
+
+        .digital-rain {
+            position: absolute;
+            color: #f2fcaf;
+            font-size: 12px;
+            animation: matrixRain 8s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes matrixRain {
+            0% { transform: translateY(-100px); opacity: 0; }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        /* Main Container */
+        .dashboard-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ff0040;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 30px rgba(255, 0, 64, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 0, 64, 0.1), transparent);
+            animation: scanLine 3s linear infinite;
+        }
+
+        @keyframes scanLine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .profile-title {
+            font-family: 'Creepster', cursive;
+            font-size: 3rem;
+            color: #ff0040;
+            text-shadow: 0 0 20px #ff0040, 0 0 40px #ff0040;
+            margin-bottom: 10px;
+            animation: titleGlitch 4s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes titleGlitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+            98% { transform: translate(2px, 2px); }
+        }
+
+        .profile-subtitle {
+            font-size: 1.2rem;
+            color: #fffdb9;
+            text-shadow: 0 0 10px #ebfca4;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 3px solid #a69d34;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .avatar-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0040, #00ff88);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            animation: avatarPulse 3s infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 64, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0, 255, 136, 0.7); }
+        }
+
+        .player-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .player-rank {
+            font-size: 1rem;
+            color: #ff6666;
+            text-shadow: 0 0 5px #ff6666;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-stats {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 3px solid #ff0040;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 25px rgba(255, 0, 64, 0.3);
+            position: relative;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.3);
+            border-color: #ff0040;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #ff0040;
+            text-shadow: 0 0 10px #ff0040;
+            display: block;
+            animation: numberGlow 2s infinite alternate;
+        }
+
+        @keyframes numberGlow {
+            0% { text-shadow: 0 0 10px #ff0040; }
+            100% { text-shadow: 0 0 20px #ff0040, 0 0 30px #ff0040; }
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #eafd95;
+            margin-top: 5px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-panel {
+            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+            border: 2px solid #eef6a4;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-panel:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.4);
+            border-color: #ff0040;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #7a9432;
+            text-shadow: 0 0 10px #789333;
+        }
+
+        .panel-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            animation: iconSpin 4s linear infinite;
+        }
+
+        @keyframes iconSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Level Progress */
+        .level-progress {
+            margin-bottom: 20px;
+        }
+
+        .level-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .level-item.completed {
+            border-left-color: #9ba13b;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .level-item.current {
+            border-left-color: #ff0040;
+            background: rgba(255, 0, 64, 0.1);
+            animation: currentLevel 2s infinite;
+        }
+
+        @keyframes currentLevel {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 64, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 0, 64, 0.6); }
+        }
+
+        .level-name {
+            font-weight: 700;
+            color: #90992f;
+        }
+
+        .level-status {
+            font-size: 0.9rem;
+            color: #ff6666;
+        }
+
+        /* Daily Progress */
+        .daily-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .day-cell.completed {
+            background: linear-gradient(45deg, #90992c, #8b872a);
+            color: #000;
+            font-weight: 700;
+            animation: dayPulse 1s ease-in-out;
+        }
+
+        @keyframes dayPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .day-cell.today {
+            border-color: #ff0040;
+            box-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+        }
+
+        /* Friends List */
+        .friends-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(43, 92, 134, 0.6);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .friend-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateX(10px);
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0040, #879f2f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .friend-info {
+            flex: 1;
+        }
+
+        .friend-name {
+            font-weight: 700;
+            color: #2b6194;
+            margin-bottom: 2px;
+        }
+
+        .friend-status {
+            font-size: 0.8rem;
+            color: #ff6666;
+        }
+
+        .friend-status.online {
+            color: #26517f;
+        }
+
+        /* Achievements */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(48, 136, 165, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .achievement-item.unlocked {
+            background: rgba(51, 171, 190, 0.2);
+            border: 2px solid #a76a15;
+            animation: achievementGlow 3s infinite;
+        }
+
+        @keyframes achievementGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(48, 136, 165, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(72, 197, 186, 0.6); }
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .achievement-name {
+            font-size: 0.8rem;
+            color: #bfbc2a;
+            font-weight: 700;
+        }
+
+        /* Horror Effects */
+        .glitch-effect {
+            animation: glitchShake 0.3s infinite;
+        }
+
+        @keyframes glitchShake {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .blood-drip {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 0;
+            background: linear-gradient(to bottom, #ff0040, #cc0033);
+            animation: bloodDrip 3s ease-in-out infinite;
+        }
+
+        @keyframes bloodDrip {
+            0% { height: 0; top: 0; }
+            50% { height: 100px; top: 0; }
+            100% { height: 0; top: 100px; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff0040, #acad40);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #a2b843, #ff0040);
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-effects" id="bgEffects"></div>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="profile-title">DIGITAL SOUL PROFILE</h1>
+            <p class="profile-subtitle">⚠ MAINFRAME ACCESS GRANTED - SOUL ANALYSIS COMPLETE ⚠</p>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="profile-avatar">
+                <div class="avatar-image">👤</div>
+                <div class="player-name" id="playerName">GHOST_HACKER_001</div>
+                <div class="player-rank" id="playerRank">Digital Phantom</div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalScore">13,666</span>
+                        <span class="stat-label">SOUL POINTS</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="levelsCompleted">3</span>
+                        <span class="stat-label">CIRCUITS REPAIRED</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="currentStreak">7</span>
+                        <span class="stat-label">HAUNTING STREAK</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="totalFriends">12</span>
+                        <span class="stat-label">TRAPPED SOULS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Level Progress -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">🔧</span>
+                    CIRCUIT REPAIR PROGRESS
+                </div>
+                <div class="level-progress" id="levelProgress">
+                    <!-- Levels will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Daily Progress -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">📅</span>
+                    DAILY HAUNTING CALENDAR
+                </div>
+                <div>
+                    <p style="color: #ff6666; margin-bottom: 15px;">
+                        Current Streak: <span id="streakDays">7 days</span> 🔥
+                    </p>
+                    <div class="daily-calendar" id="dailyCalendar">
+                        <!-- Calendar will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends List -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">👥</span>
+                    TRAPPED SOULS NETWORK
+                </div>
+                <div class="friends-list" id="friendsList">
+                    <!-- Friends will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="dashboard-panel">
+                <div class="panel-header">
+                    <span class="panel-icon">🏆</span>
+                    DIGITAL ACHIEVEMENTS
+                </div>
+                <div class="achievements-grid" id="achievementsGrid">
+                    <!-- Achievements will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class HorrorDashboard {
+            constructor() {
+                this.playerData = {
+                    name: "GHOST_HACKER_001",
+                    rank: "Digital Phantom",
+                    totalScore: 13666,
+                    levelsCompleted: 3,
+                    currentStreak: 7,
+                    totalFriends: 12,
+                    levels: [
+                        { name: "Missing Links", status: "completed", score: 2500 },
+                        { name: "Balance Tree", status: "completed", score: 3200 },
+                        { name: "Sort Surge", status: "completed", score: 2800 },
+                        { name: "Graph Flow", status: "current", score: 0 },
+                        { name: "AI Firewall", status: "locked", score: 0 }
+                    ],
+                    friends: [
+                        { name: "SHADOW_CODER", avatar: "👻", status: "online", lastSeen: "now" },
+                        { name: "DARK_DEBUGGER", avatar: "🎃", status: "offline", lastSeen: "2h ago" },
+                        { name: "PHANTOM_DEV", avatar: "💀", status: "online", lastSeen: "now" },
+                        { name: "GHOST_MAPPER", avatar: "👹", status: "in-game", lastSeen: "playing" },
+                        { name: "SOUL_FEEDER", avatar: "🔥", status: "offline", lastSeen: "1d ago" },
+                        { name: "VOID_WALKER", avatar: "⚡", status: "online", lastSeen: "now" }
+                    ],
+                    achievements: [
+                        { name: "First Blood", icon: "🩸", unlocked: true },
+                        { name: "Ghost Hunter", icon: "👻", unlocked: true },
+                        { name: "Code Reaper", icon: "💀", unlocked: true },
+                        { name: "Digital Demon", icon: "👹", unlocked: false },
+                        { name: "Soul Collector", icon: "🔥", unlocked: false },
+                        { name: "Mainframe Master", icon: "⚡", unlocked: false }
+                    ]
+                };
+                
+                this.init();
+            }
+
+            init() {
+                this.createBackgroundEffects();
+                this.populateProfile();
+                this.populateLevels();
+                this.populateDailyCalendar();
+                this.populateFriends();
+                this.populateAchievements();
+                this.startHorrorEffects();
+                this.animateStats();
+            }
+
+            createBackgroundEffects() {
+                const bgEffects = document.getElementById('bgEffects');
+                
+                // Create smoke particles
+                for (let i = 0; i < 6; i++) {
+                    const smoke = document.createElement('div');
+                    smoke.className = 'smoke-particle';
+                    smoke.style.left = Math.random() * 100 + '%';
+                    smoke.style.animationDelay = Math.random() * 12 + 's';
+                    smoke.style.animationDuration = (8 + Math.random() * 8) + 's';
+                    bgEffects.appendChild(smoke);
+                }
+
+                // Create digital rain
+                for (let i = 0; i < 20; i++) {
+                    const rain = document.createElement('div');
+                    rain.className = 'digital-rain';
+                    rain.textContent = Math.random() > 0.5 ? '1' : '0';
+                    rain.style.left = Math.random() * 100 + '%';
+                    rain.style.animationDelay = Math.random() * 8 + 's';
+                    rain.style.animationDuration = (6 + Math.random() * 4) + 's';
+                    bgEffects.appendChild(rain);
+                }
+            }
+
+            populateProfile() {
+                document.getElementById('playerName').textContent = this.playerData.name;
+                document.getElementById('playerRank').textContent = this.playerData.rank;
+            }
+
+            populateLevels() {
+                const levelProgress = document.getElementById('levelProgress');
+                levelProgress.innerHTML = '';
+
+                this.playerData.levels.forEach((level, index) => {
+                    const levelItem = document.createElement('div');
+                   levelItem.className = `level-item ${level.status}`;
+
+                    
+                    let statusText = '';
+                    let statusIcon = '';
+                    
+                    switch (level.status) {
+                        case 'completed':
+                           statusText = `✅ REPAIRED - ${level.score} pts`;
+
+                            statusIcon = '🔧';
+                            break;
+                        case 'current':
+                            statusText = '⚡ IN PROGRESS';
+                            statusIcon = '🔥';
+                            break;
+                        case 'locked':
+                            statusText = '🔒 CORRUPTED';
+                            statusIcon = '💀';
+                            break;
+                    }
+
+                    levelItem.innerHTML = `
+                        <div>
+                            <span class="level-name">${statusIcon} Level ${index + 1}: ${level.name}</span>
+                        </div>
+                        <div class="level-status">${statusText}</div>
+                    `;
+
+                    levelProgress.appendChild(levelItem);
+                });
+            }
+
+            populateDailyCalendar() {
+                const calendar = document.getElementById('dailyCalendar');
+                calendar.innerHTML = '';
+
+                const today = new Date();
+                const currentDay = today.getDay();
+                const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+                
+                // Create day headers
+                daysOfWeek.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-cell';
+                    dayHeader.textContent = day;
+                    dayHeader.style.color = '#666';
+                    dayHeader.style.fontWeight = 'bold';
+                    calendar.appendChild(dayHeader);
+                });
+
+                // Create calendar days (showing last 7 days)
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date(today);
+                    date.setDate(date.getDate() - i);
+                    
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'day-cell';
+                    dayCell.textContent = date.getDate();
+                    
+                    if (i === 0) {
+                        dayCell.classList.add('today');
+                    }
+                    
+                    // Mark completed days (simulate streak)
+                    if (i < this.playerData.currentStreak) {
+                        dayCell.classList.add('completed');
+                    }
+                    
+                    calendar.appendChild(dayCell);
+                }
+            }
+
+            populateFriends() {
+                const friendsList = document.getElementById('friendsList');
+                friendsList.innerHTML = '';
+
+                this.playerData.friends.forEach(friend => {
+                    const friendItem = document.createElement('div');
+                    friendItem.className = 'friend-item';
+                    
+                    friendItem.innerHTML = `
+                        <div class="friend-avatar">${friend.avatar}</div>
+                        <div class="friend-info">
+                            <div class="friend-name">${friend.name}</div>
+                            <div class="friend-status ${friend.status}">${friend.status.toUpperCase()} - ${friend.lastSeen}</div>
+                        </div>
+                    `;
+
+                    friendItem.addEventListener('click', () => {
+                        this.showCreepyMessage(`Connecting to ${friend.name}... Soul link established...`);
+
+                    });
+
+                    friendsList.appendChild(friendItem);
+                });
+            }
+
+            populateAchievements() {
+                const achievementsGrid = document.getElementById('achievementsGrid');
+                achievementsGrid.innerHTML = '';
+
+                this.playerData.achievements.forEach(achievement => {
+                    const achievementItem = document.createElement('div');
+                   achievementItem.className = `achievement-item ${achievement.unlocked ? 'unlocked' : ''}`;
+
+                    
+                    achievementItem.innerHTML = `
+                        <span class="achievement-icon">${achievement.icon}</span>
+                        <div class="achievement-name">${achievement.name}</div>
+                    `;
+
+                   achievementItem.addEventListener('click', () => {
+    if (achievement.unlocked) {
+        this.showCreepyMessage(`Achievement unlocked: ${achievement.name}... Your soul grows darker...`);
+    } else {
+        this.showCreepyMessage(`Achievement locked... Complete more circuits to unlock...`);
+    }
+});
+
+
+                    achievementsGrid.appendChild(achievementItem);
+                });
+            }
+
+            animateStats() {
+                const stats = [
+                    { id: 'totalScore', target: this.playerData.totalScore },
+                    { id: 'levelsCompleted', target: this.playerData.levelsCompleted },
+                    { id: 'currentStreak', target: this.playerData.currentStreak },
+                    { id: 'totalFriends', target: this.playerData.totalFriends }
+                ];
+
+                stats.forEach(stat => {
+                    const element = document.getElementById(stat.id);
+                    let current = 0;
+                    const increment = stat.target / 50;
+                    
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= stat.target) {
+                            current = stat.target;
+                            clearInterval(timer);
+                        }
+                        element.textContent = Math.floor(current).toLocaleString();
+                    }, 50);
+                });
+            }
+
+            startHorrorEffects() {
+                // Random glitch effects
+                setInterval(() => {
+                    const panels = document.querySelectorAll('.dashboard-panel');
+                    const randomPanel = panels[Math.floor(Math.random() * panels.length)];
+                    randomPanel.classList.add('glitch-effect');
+                    
+                    setTimeout(() => {
+                        randomPanel.classList.remove('glitch-effect');
+                    }, 300);
+                }, 8000);
+
+                // Random blood drips
+                setInterval(() => {
+                    const bloodDrip = document.createElement('div');
+                    bloodDrip.className = 'blood-drip';
+                    bloodDrip.style.left = Math.random() * 100 + '%';
+                    document.body.appendChild(bloodDrip);
+                    
+                    setTimeout(() => {
+                        bloodDrip.remove();
+                    }, 3000);
+                }, 15000);
+
+                // Creepy console messages
+                const creepyMessages = [
+                    "Your digital soul is being analyzed...",
+                    "The mainframe sees all your failures...",
+                    "Friends list updated... souls collected...",
+                    "Achievement progress... darkness spreading...",
+                    "Daily streak... feeding the digital demons..."
+                ];
+
+                setInterval(() => {
+                    const message = creepyMessages[Math.floor(Math.random() * creepyMessages.length)];
+                    console.log(`%c${message}`, 'color: #ff0040; font-size: 14px; font-weight: bold; text-shadow: 0 0 10px #ff0040;');
+                }, 12000);
+
+                // Random stat updates (simulate real-time changes)
+                setInterval(() => {
+                    if (Math.random() > 0.7) {
+                        this.playerData.totalScore += Math.floor(Math.random() * 100);
+                        document.getElementById('totalScore').textContent = this.playerData.totalScore.toLocaleString();
+                        this.showCreepyMessage("Soul points increased... The mainframe feeds...");
+                    }
+                }, 20000);
+            }
+
+            showCreepyMessage(message) {
+                // Create temporary message overlay
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0, 0, 0, 0.9);
+                    color: #ff0040;
+                    padding: 20px 40px;
+                    border: 2px solid #ff0040;
+                    border-radius: 10px;
+                    font-family: 'Orbitron', monospace;
+                    font-size: 1.2rem;
+                    text-align: center;
+                    z-index: 1000;
+                    box-shadow: 0 0 30px rgba(255, 0, 64, 0.5);
+                    animation: messageGlow 0.5s ease-in-out;
+                `;
+                overlay.textContent = message;
+                
+                document.body.appendChild(overlay);
+                
+                setTimeout(() => {
+                    overlay.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new HorrorDashboard();
+        });
+
+        // Add some interactive hover effects
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.stat-item')) {
+                e.target.closest('.stat-item').style.transform = 'translateY(-5px) scale(1.05)';
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('.stat-item')) {
+                e.target.closest('.stat-item').style.transform = 'translateY(0) scale(1)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enter If You Dare - Login</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDKs (Compat Version for firebase.auth() to work) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBGr4qr_IA7tEzg-x1IYGJg4Q6dbcVnwSM",
+      authDomain: "login-aa18a.firebaseapp.com",
+      projectId: "login-aa18a",
+      storageBucket: "login-aa18a.appspot.com",
+      messagingSenderId: "1065281980873",
+      appId: "1:1065281980873:web:b47f885c18b00f0b1d8018",
+      measurementId: "G-3CEPENY352"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Creepster', cursive;
+      background: url('loginback.png') no-repeat center center/cover;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .thunder::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: white;
+      opacity: 0;
+      z-index: 10;
+    }
+
+    .blood-splash {
+      position: absolute;
+      width: 200px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .skeleton {
+      position: absolute;
+      right: -300px;
+      bottom: 0;
+      z-index: 25;
+      width: 300px;
+      transition: transform 0.3s ease;
+    }
+
+    .settings-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 40;
+    }
+
+    .settings-btn svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+      cursor: pointer;
+      animation: spin 6s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    .input-glow:focus {
+      box-shadow: 0 0 10px red;
+      outline: none;
+    }
+
+    .flash {
+      animation: flash 0.2s;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center thunder">
+
+  <!-- Blood splash -->
+  <img src="blood-splatter.gif" class="blood-splash" id="bloodSplash" alt="Blood Splash">
+
+  <!-- Screaming Skeleton -->
+  <img src="skeleton-17793_256.gif" class="skeleton" id="skeleton" alt="Skeleton">
+
+  <!-- Login Form -->
+  <div class="bg-black bg-opacity-80 rounded-lg p-8 shadow-2xl text-red-600 z-20 w-[350px] text-center">
+    <h1 class="text-4xl mb-6">Login... If You Dare</h1>
+    <input id="email" type="email" placeholder="Email" class="w-full p-2 mb-4 bg-black border border-red-600 rounded input-glow text-white">
+    <input id="password" type="password" placeholder="Password" class="w-full p-2 mb-4 bg-black border border-red-600 rounded input-glow text-white">
+    <button id="loginBtn" class="bg-red-800 hover:bg-red-600 text-white py-2 px-6 rounded shadow-md transition-all duration-300">
+      Login
+    </button>
+  </div>
+
+  <!-- Settings Button -->
+  <div class="settings-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+      <path d="M487.4 315.7l-42.7-24.6c2.7-14.1 2.7-28.7 0-42.7l42.7-24.6c10.9-6.3 15.3-20 10.1-31.2l-45.5-78.8c-5.2-9-16.4-13.2-26.5-9.8l-50.2 17.5c-11-8.4-23.2-15.2-36.2-20.3l-7.6-53.2C331.1 8.3 320.3 0 307.9 0h-103.8c-12.4 0-23.2 8.3-25.6 20.1l-7.6 53.2c-13 5.1-25.2 11.9-36.2 20.3l-50.2-17.5c-10.1-3.5-21.3.8-26.5 9.8l-45.5 78.8c-5.2 9.2-.8 24.9 10.1 31.2l42.7 24.6c-2.7 14.1-2.7 28.7 0 42.7l-42.7 24.6c-10.9 6.3-15.3 20-10.1 31.2l45.5 78.8c5.2 9 16.4 13.2 26.5 9.8l50.2-17.5c11 8.4 23.2 15.2 36.2 20.3l7.6 53.2c2.4 11.8 13.2 20.1 25.6 20.1h103.8c12.4 0 23.2-8.3 25.6-20.1l7.6-53.2c13-5.1 25.2-11.9 36.2-20.3l50.2 17.5c10.1 3.5 21.3-.8 26.5-9.8l45.5-78.8c5.2-9.2.8-24.9-10.1-31.2zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80c44.1 0 80 35.9 80 80s-35.9 80-80 80z"/>
+    </svg>
+  </div>
+
+  <!-- Login Logic Script -->
+  <script>
+    // Thunder effect
+    function thunderFlash() {
+      const flash = document.createElement('div');
+      flash.className = 'thunder-flash';
+      flash.style.position = 'absolute';
+      flash.style.top = '0';
+      flash.style.left = '0';
+      flash.style.width = '100%';
+      flash.style.height = '100%';
+      flash.style.backgroundColor = 'white';
+      flash.style.opacity = '0';
+      flash.style.zIndex = '10';
+      document.body.appendChild(flash);
+
+      gsap.to(flash, {
+        opacity: 1,
+        duration: 0.1,
+        yoyo: true,
+        repeat: 1,
+        onComplete: () => {
+          document.body.removeChild(flash);
+        }
+      });
+    }
+
+    setInterval(() => {
+      if (Math.random() > 0.7) thunderFlash();
+    }, 6000);
+
+    // Login auth handler
+    const loginBtn = document.getElementById('loginBtn');
+    const bloodSplash = document.getElementById('bloodSplash');
+    const skeleton = document.getElementById('skeleton');
+
+    loginBtn.addEventListener('click', () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          gsap.to(bloodSplash, { scale: 1, duration: 0.3, ease: "back.out(2)" });
+          gsap.to(skeleton, { x: -300, duration: 1, ease: "power4.out" });
+
+          setTimeout(() => {
+            const scream = new Audio("scream.mp3");
+            scream.play().catch(e => console.log("Audio play failed:", e));
+          }, 500);
+
+          setTimeout(() => {
+            alert("Success! Redirecting to home...");
+             window.location.href = 'home.html';
+          }, 4000);
+        })
+        .catch(error => {
+          gsap.to(["#email", "#password"], {
+            x: [-5, 5, -5, 5, 0],
+            duration: 0.5,
+            ease: "power1.inOut"
+          });
+          alert("Login failed 👻: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>

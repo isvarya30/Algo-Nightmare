@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Haunted DSA Escape Room - Premium Horror Experience</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Chiller&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      background: radial-gradient(circle, #000000 0%, #1a0000 100%); 
+      color: white; 
+      font-family: 'Creepster', cursive; 
+      overflow: hidden;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><circle cx="10" cy="10" r="8" fill="red" opacity="0.5"/></svg>'), auto;
+    }
+    :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      font-family: 'Creepster', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .modeMenu {
+      border: 2px solid crimson;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 0 20px crimson;
+      display: inline-block;
+      min-width: 500px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .modeMenu h2 {
+      margin-bottom: 25px;
+      font-size: 2rem;
+      text-shadow: 2px 2px 5px crimson;
+    }
+
+    .mode-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .mode-buttons button {
+      background: black;
+      color: crimson;
+      border: 2px solid crimson;
+      padding: 10px 25px;
+      font-size: 1.3rem;
+      font-family: 'Creepster', cursive;
+      cursor: pointer;
+      width: 100px;
+      transition: 0.3s ease;
+    }
+
+    .mode-buttons button:hover {
+      background: crimson;
+      color: black;
+      box-shadow: 0 0 10px crimson;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vanilla:hover {
+  filter: drop-shadow(0 0 2em #f7df1eaa);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+
+    .blood-drip {
+      position: absolute;
+      width: 2px;
+      background: linear-gradient(to bottom, #ff0000, #8b0000);
+      animation: drip 3s infinite;
+      z-index: 0;
+    }
+
+    @keyframes drip {
+      0% { height: 0; top: 0; }
+      50% { height: 100px; }
+      100% { height: 100px; top: 100vh; opacity: 0; }
+    }
+
+    .house { 
+      position: relative; 
+      width: 100vw; 
+      height: 100vh; 
+      text-align: center; 
+      overflow: hidden;
+      background: linear-gradient(45deg, #000000, #330000, #000000);
+      animation: backgroundPulse 4s infinite;
+    }
+
+    @keyframes backgroundPulse {
+      0%, 100% { background: linear-gradient(45deg, #000000, #330000, #000000); }
+      50% { background: linear-gradient(45deg, #1a0000, #000000, #1a0000); }
+    }
+
+    .bg { 
+      position: absolute; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      filter: brightness(0.2) contrast(1.5) hue-rotate(20deg); 
+      z-index: -1;
+      animation: bgShake 5s infinite;
+    }
+
+    @keyframes bgShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px) rotate(0.5deg); }
+      75% { transform: translateX(2px) rotate(-0.5deg); }
+    }
+
+    .door, .inner-door { 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%); 
+      width: 200px; 
+      height: 280px;
+      background: linear-gradient(135deg, #111, #300, #111); 
+      border: 8px solid #8b0000; 
+      border-radius: 15px;
+      box-shadow: 0 0 40px #8b0000, inset 0 0 20px rgba(255,0,0,0.3); 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      animation: doorPulse 2s infinite; 
+      transition: all 0.4s ease; 
+      z-index: 3;
+      position: relative;
+    }
+
+    .door::after, .inner-door::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      background: linear-gradient(45deg, transparent, #ff0000, transparent);
+      border-radius: 20px;
+      z-index: -1;
+      animation: rotateBorder 3s linear infinite;
+    }
+
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .door:hover, .inner-door:hover { 
+      transform: translate(-50%, -50%) scale(1.1) rotateY(5deg); 
+      box-shadow: 0 0 60px #ff0000, inset 0 0 30px rgba(255,0,0,0.5);
+      animation: doorShake 0.5s infinite;
+    }
+
+    @keyframes doorShake {
+      0%, 100% { transform: translate(-50%, -50%) scale(1.1) rotateY(5deg); }
+      25% { transform: translate(-50%, -50%) scale(1.1) rotateY(5deg) translateX(-2px); }
+      75% { transform: translate(-50%, -50%) scale(1.1) rotateY(5deg) translateX(2px); }
+    }
+
+    .door span, .inner-door span { 
+      font-size: 2.5rem; 
+      color: #ff6666; 
+      text-shadow: 3px 3px 10px #8b0000;
+      animation: textGlow 2s infinite;
+    }
+
+    @keyframes textGlow {
+      0%, 100% { text-shadow: 3px 3px 10px #8b0000; }
+      50% { text-shadow: 3px 3px 20px #ff0000, 0 0 30px #ff0000; }
+    }
+
+    @keyframes doorPulse { 
+      0%, 100% { box-shadow: 0 0 40px #8b0000, inset 0 0 20px rgba(255,0,0,0.3); } 
+      50% { box-shadow: 0 0 15px #660000, inset 0 0 10px rgba(150,0,0,0.2); } 
+    }
+
+    .room { 
+      position: absolute; 
+      top: 5%; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      width: 95%; 
+      max-width: 900px;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 0, 0, 0.95)); 
+      border: 3px solid #8b0000; 
+      border-radius: 15px; 
+      padding: 25px;
+      display: none; 
+      z-index: 2; 
+      animation: roomAppear 0.8s ease;
+      box-shadow: 0 0 50px rgba(139, 0, 0, 0.8), inset 0 0 30px rgba(255, 0, 0, 0.1);
+    }
+
+    @keyframes roomAppear { 
+      from { opacity: 0; transform: translateX(-50%) scale(0.8) rotateX(45deg); } 
+      to { opacity: 1; transform: translateX(-50%) scale(1) rotateX(0deg); } 
+    }
+
+    .room h2 { 
+      color: #ff4444; 
+      margin-bottom: 15px; 
+      font-size: 2.2rem;
+      text-shadow: 2px 2px 15px #8b0000;
+      animation: titleFlicker 3s infinite;
+    }
+
+    @keyframes titleFlicker {
+      0%, 90%, 100% { opacity: 1; }
+      95% { opacity: 0.3; }
+    }
+
+    .room p.narrative { 
+      color: #cccccc; 
+      font-size: 1.1rem; 
+      font-style: italic; 
+      margin-bottom: 15px;
+      line-height: 1.6;
+      text-shadow: 1px 1px 5px rgba(0,0,0,0.8);
+    }
+
+    .difficulty-selector {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .difficulty-btn {
+      padding: 12px 25px;
+      font-family: 'Creepster', cursive;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, #1a0000, #330000);
+      color: #ff6666;
+      border: 2px solid #8b0000;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .difficulty-btn:hover {
+      background: linear-gradient(135deg, #330000, #660000);
+      box-shadow: 0 0 20px #8b0000;
+      transform: scale(1.05);
+    }
+
+    .difficulty-btn.active {
+      background: linear-gradient(135deg, #660000, #8b0000);
+      box-shadow: 0 0 30px #ff0000;
+    }
+
+    .room input[type="text"] { 
+      padding: 15px; 
+      font-family: 'Courier New', monospace; 
+      width: 85%; 
+      font-size: 1.1rem;
+      background: rgba(0, 0, 0, 0.8);
+      color: #ff6666;
+      border: 2px solid #8b0000;
+      border-radius: 8px;
+      box-shadow: inset 0 0 10px rgba(139, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .room input[type="text"]:focus {
+      outline: none;
+      border-color: #ff0000;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5), inset 0 0 10px rgba(139, 0, 0, 0.5);
+    }
+
+    .room button { 
+      padding: 15px 30px; 
+      font-size: 1.2rem; 
+      font-family: 'Creepster', cursive; 
+      background: linear-gradient(135deg, #1a0000, #330000);
+      color: #ff4444; 
+      border: 3px solid #8b0000; 
+      border-radius: 10px;
+      cursor: pointer; 
+      margin: 15px 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .room button:hover {
+      background: linear-gradient(135deg, #330000, #660000);
+      box-shadow: 0 0 25px #8b0000;
+      transform: scale(1.05);
+    }
+
+    .premium-btn {
+      background: linear-gradient(135deg, #ffd700, #ffb700) !important;
+      color: #1a0000 !important;
+      border-color: #ffd700 !important;
+      animation: premiumGlow 2s infinite;
+    }
+
+    @keyframes premiumGlow {
+      0%, 100% { box-shadow: 0 0 20px #ffd700; }
+      50% { box-shadow: 0 0 40px #ffd700, 0 0 60px #ffb700; }
+    }
+
+    .inventory { 
+      margin-top: 15px; 
+      font-size: 1rem; 
+      color: #bbbbbb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar {
+      width: 200px;
+      height: 10px;
+      background: #1a0000;
+      border: 1px solid #8b0000;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ff0000, #ff6666);
+      width: 0%;
+      transition: width 0.5s ease;
+      animation: progressPulse 2s infinite;
+    }
+
+    @keyframes progressPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .success { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+    .error { color: #ff6600; text-shadow: 0 0 10px #ff6600; }
+
+    .ghost { 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%, -50%) scale(0.1);
+      width: 400px; 
+      height: auto; 
+      z-index: 15; 
+      transition: all 0.6s ease; 
+      display: none;
+      filter: drop-shadow(0 0 30px #ff0000);
+    }
+
+    .ghost.angry {
+      animation: ghostRage 0.5s infinite;
+    }
+
+    @keyframes ghostRage {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+      25% { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+      50% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+      75% { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+    }
+
+    .ghost-speech {
+      position: absolute;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: #ff0000;
+      padding: 15px 20px;
+      border-radius: 15px;
+      border: 2px solid #8b0000;
+      font-family: 'Chiller', cursive;
+      font-size: 1.5rem;
+      min-width: 300px;
+      text-align: center;
+      animation: speechBubble 0.5s ease;
+    }
+
+    .ghost-speech::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 10px solid #8b0000;
+    }
+
+    @keyframes speechBubble {
+      from { opacity: 0; transform: translateX(-50%) scale(0.8); }
+      to { opacity: 1; transform: translateX(-50%) scale(1); }
+    }
+
+    .interview-mode {
+      background: linear-gradient(135deg, rgba(0, 20, 0, 0.95), rgba(0, 40, 0, 0.95));
+      border-color: #00ff00;
+    }
+
+    .interview-question {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      border: 2px solid #00ff00;
+      margin: 15px 0;
+    }
+
+    .timer {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .modal-content {
+      background: linear-gradient(135deg, #1a0000, #330000);
+      padding: 30px;
+      border-radius: 15px;
+      border: 3px solid #ffd700;
+      text-align: center;
+      max-width: 500px;
+      animation: modalAppear 0.5s ease;
+    }
+
+    @keyframes modalAppear {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .hearts {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 2rem;
+    }
+
+    .heart {
+      color: #ff0000;
+      margin-right: 10px;
+      animation: heartbeat 2s infinite;
+    }
+
+    .heart.lost {
+      color: #333;
+      animation: none;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <audio id="bg-music" autoplay loop>
+    <source src="scream.mp3" type="audio/mpeg">
+    Your browser is too scared to play this audio.
+  </audio>
+  <!-- Blood drips -->
+  <div class="blood-drip" style="left: 10%;"></div>
+  <div class="blood-drip" style="left: 30%; animation-delay: 1s;"></div>
+  <div class="blood-drip" style="left: 50%; animation-delay: 2s;"></div>
+  <div class="blood-drip" style="left: 70%; animation-delay: 0.5s;"></div>
+  <div class="blood-drip" style="left: 90%; animation-delay: 1.5s;"></div>
+
+  <div class="house">
+    <img class="bg" src="https://images.pexels.com/photos/1653877/pexels-photo-1653877.jpeg" alt="Haunted House">
+    
+    <!-- Hearts/Lives display -->
+    <div class="hearts" id="heartsDisplay">
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+      <span class="heart">♥</span>
+    </div>
+
+    <!-- Timer -->
+    <div class="timer" id="timer">Time: 00:00</div>
+
+    <!-- Initial Door -->
+    <div class="door" onclick="startGame()"><span>ENTER IF YOU DARE</span></div>
+    
+    
+    <!-- Next Level Door -->
+    <div class="inner-door" id="nextDoor" style="display:none;" onclick="proceedToNextLevel()">
+      <span>PROCEED TO HELL</span>
+    </div>
+
+    <!-- Main Game Room -->
+    <div class="room" id="escapeRoom">
+      <!-- Difficulty Selection -->
+      <div class="difficulty-selector" id="difficultySelector">
+        <button class="difficulty-btn active" onclick="setDifficulty('easy')">APPRENTICE</button>
+        <button class="difficulty-btn" onclick="setDifficulty('medium')">SURVIVOR</button>
+        <button class="difficulty-btn" onclick="setDifficulty('hard')">NIGHTMARE</button>
+      </div>
+
+      <h2 id="roomTitle">Level 1: The Binary Tree Catacombs</h2>
+      <p class="narrative" id="narrative">The ancient spirits guard the binary tree. Find the path through the haunted nodes...</p>
+      
+      <div id="questionContainer">
+        <div id="question"></div>
+        <input type="text" id="userInput" placeholder="Enter your answer... if you dare">
+      </div>
+      
+      <br>
+      <button onclick="checkAnswer()">UNLOCK THE CURSED DOOR</button>
+      <button class="premium-btn" onclick="showPremiumSolution()">💎 REVEAL PREMIUM SOLUTION 💎</button>
+      
+      <p id="feedback"></p>
+      
+      <div class="inventory" id="inventory">
+        <span>🗝️ Souls Collected: <span id="clueCount">0</span>/5</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interview Mode -->
+    <div class="room interview-mode" id="interviewRoom" style="display:none;">
+      <h2>🎓 AI TECHNICAL INTERVIEW - FINAL JUDGMENT</h2>
+      <p class="narrative">The ghost master will now test your knowledge. Answer correctly or face eternal damnation!</p>
+      
+      <div class="interview-question" id="interviewQuestion"></div>
+      <input type="text" id="interviewInput" placeholder="Your final answer...">
+      <br>
+      <button onclick="checkInterviewAnswer()">FACE YOUR JUDGMENT</button>
+      
+      <p id="interviewFeedback"></p>
+      <div class="inventory">
+        Interview Progress: <span id="interviewProgress">0</span>/3
+      </div>
+    </div>
+
+    <!-- Ghost -->
+    <img src="https://images.pexels.com/photos/33688/delicate-arch-night-stars-landscape.jpeg" class="ghost" id="ghost" style="filter: invert(1) contrast(2) brightness(2) hue-rotate(180deg);">
+  </div>
+
+  <!-- Premium Modal -->
+  <div class="modal" id="premiumModal">
+    <div class="modal-content">
+      <h2 style="color: #ffd700;">💎 PREMIUM SOLUTION ACCESS 💎</h2>
+      <p>Unlock the mystical solution for $9.99</p>
+      <p style="color: #ff6666; font-size: 0.9rem;">*This is a demo - no actual payment required*</p>
+      <button onclick="unlockPremiumSolution()" style="margin: 10px;">UNLOCK NOW</button>
+      <button onclick="closePremiumModal()" style="margin: 10px;">MAYBE LATER</button>
+    </div>
+  </div>
+
+  <script>
+    // Game State
+    let currentLevel = 1;
+    let currentDifficulty = 'easy';
+    let clues = 0;
+    let lives = 3;
+    let wrongCount = 0;
+    let gameTimer = 0;
+    let timerInterval;
+    let interviewQuestionIndex = 0;
+    let interviewCorrect = 0;
+
+    // Game Elements
+    const ghost = document.getElementById('ghost');
+    const roomTitle = document.getElementById('roomTitle');
+    const narrative = document.getElementById('narrative');
+    const question = document.getElementById('question');
+    const userInput = document.getElementById('userInput');
+    const feedback = document.getElementById('feedback');
+    const clueCount = document.getElementById('clueCount');
+    const progressFill = document.getElementById('progressFill');
+    const heartsDisplay = document.getElementById('heartsDisplay');
+    const timerDisplay = document.getElementById('timer');
+
+    // Horror sound effects (using Web Audio API)
+    function playScareSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(50, audioContext.currentTime + 0.5);
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    }
+
+    // Question Database
+    const questions = {
+      easy: [
+        {
+          level: 1,
+          title: "Level 1: The Binary Tree Catacombs",
+          narrative: "The ancient spirits guard the binary tree. Find the inorder traversal path...",
+          question: "Given binary tree: 1(2(4,5),3(6,7)), what is the inorder traversal?",
+          answer: "4,2,5,1,6,3,7"
+        },
+        {
+          level: 2,
+          title: "Level 2: The Stack of Souls",
+          narrative: "Souls are trapped in a mystical stack. Help them escape in the right order...",
+          question: "After push(10), push(20), pop(), push(30), pop(), what remains in the stack?",
+          answer: "10"
+        },
+        {
+          level: 3,
+          title: "Level 3: The Queue of the Damned",
+          narrative: "The damned spirits wait in an eternal queue. Process them correctly...",
+          question: "After enqueue(A), enqueue(B), dequeue(), enqueue(C), what's the front element?",
+          answer: "B"
+        },
+        {
+          level: 4,
+          title: "Level 4: The Sorting Ritual",
+          narrative: "Ancient runes must be sorted to break the curse. Use bubble sort...",
+          question: "After one pass of bubble sort on [64,34,25,12], what's the array?",
+          answer: "[34,25,12,64]"
+        },
+        {
+          level: 5,
+          title: "Level 5: The Final Recursion",
+          narrative: "The final spell requires recursive thinking. Calculate the factorial...",
+          question: "What is factorial(5)?",
+          answer: "120"
+        }
+      ],
+      medium: [
+        {
+          level: 1,
+          title: "Level 1: AVL Tree Nightmare",
+          narrative: "The cursed AVL tree is unbalanced. Fix it or be consumed...",
+          question: "After inserting 10,20,30 into an empty AVL tree, what's the root?",
+          answer: "20"
+        },
+        {
+          level: 2,
+          title: "Level 2: Graph Traversal Hell",
+          narrative: "Navigate through the graph of lost souls using DFS...",
+          question: "DFS from node A in graph A-B-C-D (A connects to B,C; B to D), visit order?",
+          answer: "A,B,D,C"
+        },
+        {
+          level: 3,
+          title: "Level 3: Dynamic Programming Abyss",
+          narrative: "The fibonacci sequence holds the key to escape...",
+          question: "Using DP, what's the 7th fibonacci number? (starting with F(0)=0, F(1)=1)",
+          answer: "13"
+        },
+        {
+          level: 4,
+          title: "Level 4: Hash Table Chaos",
+          narrative: "The hash table is corrupted. Find the collision resolution...",
+          question: "With hash function h(x)=x%5, where does key 12 go if positions 2,3 are occupied?",
+          answer: "4"
+        },
+        {
+          level: 5,
+          title: "Level 5: Minimum Spanning Tree",
+          narrative: "Connect the haunted nodes with minimum cost or perish...",
+          question: "In a triangle graph with edges AB=1, BC=2, AC=3, what's the MST weight?",
+          answer: "3"
+        }
+      ],
+      hard: [
+        {
+          level: 1,
+          title: "Level 1: Red-Black Tree Inferno",
+          narrative: "The red-black tree of damnation needs balancing...",
+          question: "After inserting 7,3,18,10,22,8,11,26 into RB tree, how many black nodes on path from root to any leaf?",
+          answer: "3"
+        },
+        {
+          level: 2,
+          title: "Level 2: Dijkstra's Nightmare",
+          narrative: "Find the shortest path through the maze of tortured souls...",
+          question: "In graph A(B:1,C:4), B(C:2,D:5), C(D:1), shortest path A to D?",
+          answer: "A-B-C-D"
+        },
+        {
+          level: 3,
+          title: "Level 3: Advanced DP Torment",
+          narrative: "The longest common subsequence spell must be cast perfectly...",
+          question: "LCS of 'ABCDGH' and 'AEDFHR' has length?",
+          answer: "3"
+        },
+        {
+          level: 4,
+          title: "Level 4: B-Tree Pandemonium",
+          narrative: "The B-tree of order 3 holds the ancient secrets...",
+          question: "In a B-tree of order 3, what's the minimum number of keys in a non-root internal node?",
+          answer: "1"
+        },
+        {
+          level: 5,
+          title: "Level 5: NP-Complete Apocalypse",
+          narrative: "Solve the travelling salesman or face eternal computation...",
+          question: "For 4 cities in a square with side length 1, optimal TSP tour length?",
+          answer: "4"
+        }
+      ]
+    };
+
+    // Interview Questions
+    const interviewQuestions = [
+      {
+        question: "What is the time complexity of binary search?",
+        answer: "O(log n)"
+      },
+      {
+        question: "Which sorting algorithm has best average case performance?",
+        answer: "quicksort"
+      },
+      {
+        question: "What data structure uses LIFO principle?",
+        answer: "stack"
+      }
+    ];
+
+    // Ghost speeches for wrong answers
+    const ghostSpeeches = [
+      "FOOLISH MORTAL! TRY AGAIN!",
+      "YOUR INCOMPETENCE ANGERS ME!",
+      "PATHETIC! STUDY MORE!",
+      "YOU DARE WASTE MY TIME?!",
+      "IGNORANCE IS NO EXCUSE!",
+      "YOUR SOUL IS MINE NOW!"
+    ];
+
+    function startGame() {
+      document.querySelector('.door').style.display = 'none';
+      document.getElementById('escapeRoom').style.display = 'block';
+      startTimer();
+      loadQuestion();
+      playScareSound();
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        gameTimer++;
+        const minutes = Math.floor(gameTimer / 60);
+        const seconds = gameTimer % 60;
+        timerDisplay.textContent = `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    function setDifficulty(difficulty) {
+      currentDifficulty = difficulty;
+      document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Reset game state
+      currentLevel = 1;
+      clues = 0;
+      lives = 3;
+      wrongCount = 0;
+      updateUI();
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const currentQuestion = questions[currentDifficulty][currentLevel - 1];
+      roomTitle.textContent = currentQuestion.title;
+      narrative.textContent = currentQuestion.narrative;
+      question.textContent = currentQuestion.question;
+      userInput.value = '';
+      feedback.textContent = '';
+      
+      // Hide difficulty selector after first question
+      if (currentLevel > 1) {
+        document.getElementById('difficultySelector').style.display = 'none';
+      }
+    }
+
+    function checkAnswer() {
+      const input = userInput.value.trim().toLowerCase();
+      const currentQuestion = questions[currentDifficulty][currentLevel - 1];
+      const correctAnswer = currentQuestion.answer.toLowerCase();
+
+      if (input === correctAnswer) {
+        clues++;
+        wrongCount = 0;
+        feedback.innerHTML = "<span class='success'>✅ CORRECT! The spirits are pleased... A portal opens!</span>";
+        document.getElementById('nextDoor').style.display = 'flex';
+        updateUI();
+        playSuccessSound();
+      } else {
+        wrongCount++;
+        lives--;
+        feedback.innerHTML = "<span class='error'>❌ WRONG! The ghost master is furious!</span>";
+        updateHearts();
+        
+        if (lives <= 0) {
+          gameOver();
+        } else {
+          setTimeout(() => {
+            scare();
+          }, 500);
+        }
+      }
+    }
+
+    function playSuccessSound() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.2);
+      
+      gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.4);
+    }
+
+    function scare() {
+      ghost.style.display = 'block';
+      ghost.classList.add('angry');
+      ghost.style.transform = 'translate(-50%, -50%) scale(1.2)';
+      
+      // Add ghost speech
+      const speech = document.createElement('div');
+      speech.className = 'ghost-speech';
+      speech.textContent = ghostSpeeches[Math.floor(Math.random() * ghostSpeeches.length)];
+      ghost.appendChild(speech);
+      
+      playScareSound();
+      
+      // Screen shake effect
+      document.body.style.animation = 'shake 0.5s infinite';
+      
+      setTimeout(() => {
+        ghost.classList.remove('angry');
+        ghost.style.transform = 'translate(-50%, -50%) scale(0.1)';
+        ghost.style.display = 'none';
+        document.body.style.animation = '';
+        if (speech.parentNode) {
+          speech.parentNode.removeChild(speech);
+        }
+      }, 3000);
+    }
+
+    function proceedToNextLevel() {
+      document.getElementById('nextDoor').style.display = 'none';
+      
+      if (currentLevel >= 5) {
+        // Start interview mode
+        startInterview();
+      } else {
+        currentLevel++;
+        loadQuestion();
+      }
+    }
+
+    function startInterview() {
+      document.getElementById('escapeRoom').style.display = 'none';
+      document.getElementById('interviewRoom').style.display = 'block';
+      interviewQuestionIndex = 0;
+      interviewCorrect = 0;
+      loadInterviewQuestion();
+    }
+
+    function loadInterviewQuestion() {
+      const question = interviewQuestions[interviewQuestionIndex];
+      document.getElementById('interviewQuestion').textContent = `${interviewQuestionIndex + 1}. ${question.question}`;
+      document.getElementById('interviewInput').value = '';
+      document.getElementById('interviewFeedback').textContent = '';
+    }
+
+    function checkInterviewAnswer() {
+      const input = document.getElementById('interviewInput').value.trim().toLowerCase();
+      const correctAnswer = interviewQuestions[interviewQuestionIndex].answer.toLowerCase();
+      
+      if (input === correctAnswer) {
+        interviewCorrect++;
+        document.getElementById('interviewFeedback').innerHTML = "<span class='success'>✅ Excellent knowledge!</span>";
+      } else {
+        document.getElementById('interviewFeedback').innerHTML = "<span class='error'>❌ Incorrect, but you may proceed...</span>";
+      }
+      
+      interviewQuestionIndex++;
+      document.getElementById('interviewProgress').textContent = interviewQuestionIndex;
+      
+      if (interviewQuestionIndex >= 3) {
+        completeInterview();
+      } else {
+        setTimeout(loadInterviewQuestion, 2000);
+      }
+    }
+
+    function completeInterview() {
+      if (interviewCorrect >= 2) {
+        alert(`🎉 CONGRATULATIONS! You've mastered the ${currentDifficulty.toUpperCase()} level! Time to face greater horrors...`);
+        // Unlock next difficulty
+        if (currentDifficulty === 'easy') {
+          setDifficulty('medium');
+        } else if (currentDifficulty === 'medium') {
+          setDifficulty('hard');
+        } else {
+          victory();
+        }
+      } else {
+        alert("💀 You have failed the interview... Try the level again!");
+        restartLevel();
+      }
+    }
+
+    function victory() {
+      clearInterval(timerInterval);
+      roomTitle.textContent = "🏆 ULTIMATE VICTORY! 🏆";
+      narrative.textContent = "You have conquered all levels and interviews! You are now a DSA MASTER!";
+      document.getElementById('interviewRoom').innerHTML = `
+        <h2 style="color: gold;">🎉 LEGENDARY ACHIEVEMENT UNLOCKED! 🎉</h2>
+        <p style="font-size: 1.5rem; color: #fff;">You have survived the ultimate horror DSA challenge!</p>
+        <p>Final Time: ${timerDisplay.textContent}</p>
+        <button onclick="location.reload()" style="margin-top: 20px;">FACE THE NIGHTMARE AGAIN</button>
+      `;
+    }
+
+    function gameOver() {
+      clearInterval(timerInterval);
+      alert("💀 GAME OVER! The ghosts have claimed your soul!");
+      location.reload();
+    }
+
+    function restartLevel() {
+      document.getElementById('interviewRoom').style.display = 'none';
+      document.getElementById('escapeRoom').style.display = 'block';
+      currentLevel = 1;
+      clues = 0;
+      lives = 3;
+      wrongCount = 0;
+      updateUI();
+      loadQuestion();
+    }
+
+    function updateUI() {
+      clueCount.textContent = clues;
+      progressFill.style.width = `${(clues / 5) * 100}%`;
+      updateHearts();
+    }
+
+    function updateHearts() {
+      const hearts = document.querySelectorAll('.heart');
+      hearts.forEach((heart, index) => {
+        if (index >= lives) {
+          heart.classList.add('lost');
+        } else {
+          heart.classList.remove('lost');
+        }
+      });
+    }
+
+    function showPremiumSolution() {
+      document.getElementById('premiumModal').style.display = 'flex';
+    }
+
+    function closePremiumModal() {
+      document.getElementById('premiumModal').style.display = 'none';
+    }
+
+    function unlockPremiumSolution() {
+      const currentQuestion = questions[currentDifficulty][currentLevel - 1];
+      alert(`💎 Premium Solution Unlocked!\n\nAnswer: ${currentQuestion.answer}\n\nExplanation: This is the correct solution for the current horror challenge!`);
+      closePremiumModal();
+      
+      // Auto-fill the answer (premium feature)
+      userInput.value = currentQuestion.answer;
+    }
+
+    // Add shake animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px) rotateZ(-1deg); }
+        75% { transform: translateX(5px) rotateZ(1deg); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize UI
+    updateUI();
+  </script>
+</body>
+</html>
